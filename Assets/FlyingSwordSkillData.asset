@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: FlyingSwordSkillData
   m_EditorClassIdentifier: 
   skillName: "\u98DE\u5251\u672F"
-  damage: 10
-  cooldown: 1
-  range: 8
-  projectileSpeed: 12
-  projectileMaxDistance: 12
+  damage: 12
+  cooldown: 0.85
+  range: 8.5
+  projectileSpeed: 14
+  projectileMaxDistance: 14

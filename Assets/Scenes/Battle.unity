@@ -1174,17 +1174,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1276439959}
   runTimer: {fileID: 568224397}
+  gameManager: {fileID: 0}
   waves:
-  - waveName: 
+  - waveName: LowEnemy
     startSeconds: 0
-    endSeconds: 300
+    endSeconds: 60
     enemyPrefab: {fileID: 950173521105062702, guid: 27cfc46f5702f9140a077dd77be7b2a2, type: 3}
-    spawnInterval: 2
+    spawnInterval: 1.6
     spawnCount: 1
-    maxAlive: 10
-  spawnDistance: 12
+    maxAlive: 14
+  - waveName: MidEnemy
+    startSeconds: 60
+    endSeconds: 120
+    enemyPrefab: {fileID: 950173521105062702, guid: 81abfd8121020dd4db187425287b64ff, type: 3}
+    spawnInterval: 1.5
+    spawnCount: 1
+    maxAlive: 16
+  - waveName: EliteEnemy
+    startSeconds: 120
+    endSeconds: 180
+    enemyPrefab: {fileID: 950173521105062702, guid: ba26bc59c04dbe94e9c02ce6d502476a, type: 3}
+    spawnInterval: 2.4
+    spawnCount: 2
+    maxAlive: 12
+  spawnDistance: 11
   bossPrefab: {fileID: 950173521105062702, guid: 2de5f5d0ce4ee0a4fbd72ebcc5a59e0a, type: 3}
-  bossSpawnSeconds: 10
+  bossSpawnSeconds: 180
   stopNormalSpawnsAfterBoss: 1
 --- !u!4 &1123218859
 Transform:
@@ -1608,12 +1623,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2579d6bf3e8f4bff9a525c7153cf047f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 100
-  currentHp: 100
-  moveSpeed: 5
+  maxHp: 120
+  currentHp: 120
+  moveSpeed: 5.2
   level: 1
   currentExp: 0
-  expToNextLevel: 10
+  expToNextLevel: 12
 --- !u!61 &1276439956
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1814,6 +1829,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skills:
   - {fileID: 1276439962}
+  gameManager: {fileID: 0}
 --- !u!114 &1276439964
 MonoBehaviour:
   m_ObjectHideFlags: 0

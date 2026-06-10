@@ -16,9 +16,8 @@ GameObject:
   - component: {fileID: 5782521695710578591}
   - component: {fileID: 3654538659588393726}
   - component: {fileID: 8324548307862757380}
-  - component: {fileID: 6742755580091365541}
   m_Layer: 6
-  m_Name: Boss_HeartDemon
+  m_Name: MidEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4, y: 0, z: 0}
-  m_LocalScale: {x: 2.3, y: 2.3, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -81,7 +80,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.38688442, g: 0.61006284, b: 0.12469833, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -165,11 +164,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 302e582220077fd408b70e178b9de01a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 500
-  currentHp: 500
-  moveSpeed: 1.15
-  damage: 18
-  expDrop: 50
+  maxHp: 42
+  currentHp: 42
+  moveSpeed: 1.8
+  damage: 8
+  expDrop: 8
 --- !u!114 &5782521695710578591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,15 +208,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageInterval: 0.75
---- !u!114 &6742755580091365541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 950173521105062702}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea9382be8a6de29429da910602622440, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

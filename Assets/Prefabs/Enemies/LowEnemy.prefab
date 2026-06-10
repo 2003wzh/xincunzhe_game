@@ -164,11 +164,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 302e582220077fd408b70e178b9de01a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 20
-  currentHp: 20
-  moveSpeed: 1.5
+  maxHp: 18
+  currentHp: 18
+  moveSpeed: 1.6
   damage: 5
-  expDrop: 10
+  expDrop: 5
 --- !u!114 &5782521695710578591
 MonoBehaviour:
   m_ObjectHideFlags: 0
