@@ -31,6 +31,16 @@ namespace XianxiaSurvivor.Skills
         private bool warnedMissingProjectile;
         private bool warnedMissingLayerMask;
         private bool warnedPoolMissingProjectile;
+        private bool hasRuntimeValues;
+        private float runtimeDamage;
+        private float runtimeCooldown;
+        private float runtimeRange;
+        private float runtimeProjectileSpeed;
+        private float runtimeProjectileMaxDistance;
+
+        public int CurrentDamage => Mathf.Max(0, Mathf.RoundToInt(runtimeDamage));
+        public float CurrentCooldown => Mathf.Max(0.05f, runtimeCooldown);
+        public float CurrentRange => Mathf.Max(0.1f, runtimeRange);
 
         private void Awake()
         {
@@ -40,6 +50,7 @@ namespace XianxiaSurvivor.Skills
             }
 
             targetFinder = new TargetFinder(maxTargetResults);
+            InitializeRuntimeValues();
         }
 
         private void OnEnable()
@@ -74,7 +85,7 @@ namespace XianxiaSurvivor.Skills
             }
 
             Vector2 origin = firePoint != null ? firePoint.position : transform.position;
-            Transform target = targetFinder.FindNearestDamageable(origin, skillData.Range, enemyLayerMask);
+            Transform target = targetFinder.FindNearestDamageable(origin, CurrentRange, enemyLayerMask);
 
             if (target == null)
             {
@@ -84,7 +95,7 @@ namespace XianxiaSurvivor.Skills
 
             if (TryFireAt(target))
             {
-                cooldownTimer = skillData.Cooldown;
+                cooldownTimer = CurrentCooldown;
                 searchTimer = 0f;
             }
         }
@@ -114,9 +125,9 @@ namespace XianxiaSurvivor.Skills
 
             projectile.Initialize(
                 direction,
-                skillData.Damage,
-                skillData.ProjectileSpeed,
-                skillData.ProjectileMaxDistance,
+                CurrentDamage,
+                runtimeProjectileSpeed,
+                runtimeProjectileMaxDistance,
                 gameObject,
                 enemyLayerMask,
                 ownerPool);
@@ -164,6 +175,11 @@ namespace XianxiaSurvivor.Skills
                 return false;
             }
 
+            if (!hasRuntimeValues)
+            {
+                InitializeRuntimeValues();
+            }
+
             if (projectilePrefab == null && projectilePool == null)
             {
                 LogWarningOnce(ref warnedMissingProjectile, "FlyingSwordSkill 需要 Projectile Prefab，或可选的 Projectile Pool。");
@@ -177,6 +193,67 @@ namespace XianxiaSurvivor.Skills
             }
 
             return true;
+        }
+
+        public void AddDamage(float value)
+        {
+            if (!EnsureRuntimeValues())
+            {
+                return;
+            }
+
+            runtimeDamage = Mathf.Max(0f, runtimeDamage + Mathf.Max(0f, value));
+        }
+
+        public void ReduceCooldown(float value)
+        {
+            if (!EnsureRuntimeValues())
+            {
+                return;
+            }
+
+            runtimeCooldown = Mathf.Max(0.05f, runtimeCooldown - Mathf.Max(0f, value));
+
+            if (cooldownTimer > runtimeCooldown)
+            {
+                cooldownTimer = runtimeCooldown;
+            }
+        }
+
+        public void AddRange(float value)
+        {
+            if (!EnsureRuntimeValues())
+            {
+                return;
+            }
+
+            runtimeRange = Mathf.Max(0.1f, runtimeRange + Mathf.Max(0f, value));
+        }
+
+        private bool EnsureRuntimeValues()
+        {
+            if (!hasRuntimeValues)
+            {
+                InitializeRuntimeValues();
+            }
+
+            return hasRuntimeValues;
+        }
+
+        private void InitializeRuntimeValues()
+        {
+            if (skillData == null)
+            {
+                hasRuntimeValues = false;
+                return;
+            }
+
+            runtimeDamage = skillData.Damage;
+            runtimeCooldown = skillData.Cooldown;
+            runtimeRange = skillData.Range;
+            runtimeProjectileSpeed = skillData.ProjectileSpeed;
+            runtimeProjectileMaxDistance = skillData.ProjectileMaxDistance;
+            hasRuntimeValues = true;
         }
 
         private void LogWarningOnce(ref bool warned, string message)
