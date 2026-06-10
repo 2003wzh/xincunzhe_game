@@ -1,4 +1,6 @@
 using UnityEngine;
+using XianxiaSurvivor.Core;
+using XianxiaSurvivor.Player;
 
 namespace XianxiaSurvivor.Skills
 {
@@ -9,9 +11,19 @@ namespace XianxiaSurvivor.Skills
     public class PlayerSkillController : MonoBehaviour
     {
         [SerializeField] private FlyingSwordSkill[] skills;
+        [SerializeField] private GameManager gameManager;
+
+        private PlayerStats playerStats;
 
         private void Awake()
         {
+            playerStats = GetComponent<PlayerStats>();
+
+            if (gameManager == null)
+            {
+                gameManager = FindObjectOfType<GameManager>();
+            }
+
             if (skills == null || skills.Length == 0)
             {
                 skills = GetComponents<FlyingSwordSkill>();
@@ -20,6 +32,11 @@ namespace XianxiaSurvivor.Skills
 
         private void Update()
         {
+            if (!CanDriveSkills())
+            {
+                return;
+            }
+
             if (skills == null || skills.Length == 0)
             {
                 return;
@@ -38,6 +55,26 @@ namespace XianxiaSurvivor.Skills
 
                 skill.Tick(deltaTime);
             }
+        }
+
+        private bool CanDriveSkills()
+        {
+            if (Time.timeScale <= 0f)
+            {
+                return false;
+            }
+
+            if (playerStats != null && !playerStats.IsAlive)
+            {
+                return false;
+            }
+
+            if (gameManager != null && gameManager.IsRunEnded)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

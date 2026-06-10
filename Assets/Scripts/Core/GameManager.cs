@@ -37,6 +37,8 @@ namespace XianxiaSurvivor.Core
         [SerializeField] private GameState startState = GameState.MainMenu;
 
         public GameState CurrentState { get; private set; }
+        public bool IsRunEnded => CurrentState == GameState.Failed || CurrentState == GameState.Victory;
+        public bool IsGameplayRunning => CurrentState == GameState.Battle;
 
         private void Awake()
         {
@@ -90,7 +92,11 @@ namespace XianxiaSurvivor.Core
 
         private static void ApplyPauseState(GameState state)
         {
-            Time.timeScale = state == GameState.Paused ? 0f : 1f;
+            bool shouldPause = state == GameState.Paused
+                || state == GameState.Failed
+                || state == GameState.Victory;
+
+            Time.timeScale = shouldPause ? 0f : 1f;
         }
 
         private void OnDestroy()

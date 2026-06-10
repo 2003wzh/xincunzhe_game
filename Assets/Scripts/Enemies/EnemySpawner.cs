@@ -13,6 +13,7 @@ namespace XianxiaSurvivor.Enemies
     {
         [SerializeField] private Transform player;
         [SerializeField] private RunTimer runTimer;
+        [SerializeField] private GameManager gameManager;
         [SerializeField] private SpawnWaveConfig[] waves = new SpawnWaveConfig[0];
         [SerializeField] private float spawnDistance = 12f;
         [SerializeField] private GameObject bossPrefab;
@@ -44,6 +45,11 @@ namespace XianxiaSurvivor.Enemies
 
         private void Update()
         {
+            if (!CanSpawnEnemies())
+            {
+                return;
+            }
+
             if (runTimer == null)
             {
                 localElapsedSeconds += Time.deltaTime;
@@ -77,6 +83,26 @@ namespace XianxiaSurvivor.Enemies
             {
                 runTimer = FindObjectOfType<RunTimer>();
             }
+
+            if (gameManager == null)
+            {
+                gameManager = FindObjectOfType<GameManager>();
+            }
+        }
+
+        private bool CanSpawnEnemies()
+        {
+            if (Time.timeScale <= 0f)
+            {
+                return false;
+            }
+
+            if (gameManager != null && (gameManager.IsRunEnded || !gameManager.IsGameplayRunning))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private float GetElapsedSeconds()

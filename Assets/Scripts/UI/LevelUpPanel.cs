@@ -30,16 +30,23 @@ namespace XianxiaSurvivor.UI
         private void OnEnable()
         {
             EventBus.Subscribe<SkillUpgradeOptionsReadyEvent>(OnSkillUpgradeOptionsReady);
+            EventBus.Subscribe<GameStateChangedEvent>(OnGameStateChanged);
         }
 
         private void OnDisable()
         {
             EventBus.Unsubscribe<SkillUpgradeOptionsReadyEvent>(OnSkillUpgradeOptionsReady);
+            EventBus.Unsubscribe<GameStateChangedEvent>(OnGameStateChanged);
             ClosePanel();
         }
 
         private void OnSkillUpgradeOptionsReady(SkillUpgradeOptionsReadyEvent eventData)
         {
+            if (!CanShowUpgradePanel())
+            {
+                return;
+            }
+
             if (skillUpgradeService == null || eventData.Player != skillUpgradeService.gameObject)
             {
                 return;
@@ -48,8 +55,21 @@ namespace XianxiaSurvivor.UI
             ShowCurrentOptions();
         }
 
+        private void OnGameStateChanged(GameStateChangedEvent eventData)
+        {
+            if (eventData.CurrentState == GameState.Failed || eventData.CurrentState == GameState.Victory)
+            {
+                ClosePanelWithoutResuming();
+            }
+        }
+
         private void ShowCurrentOptions()
         {
+            if (!CanShowUpgradePanel())
+            {
+                return;
+            }
+
             if (skillUpgradeService == null)
             {
                 Debug.LogWarning("LevelUpPanel is missing SkillUpgradeService.", this);
@@ -100,6 +120,12 @@ namespace XianxiaSurvivor.UI
 
         private void OnOptionSelected(SkillUpgradeOption option)
         {
+            if (IsRunEnded())
+            {
+                ClosePanelWithoutResuming();
+                return;
+            }
+
             if (skillUpgradeService == null)
             {
                 Debug.LogWarning("LevelUpPanel cannot apply an upgrade because SkillUpgradeService is missing.", this);
@@ -121,6 +147,11 @@ namespace XianxiaSurvivor.UI
 
         private void PauseGameIfNeeded()
         {
+            if (IsRunEnded())
+            {
+                return;
+            }
+
             if (isPausedByPanel)
             {
                 return;
@@ -128,7 +159,7 @@ namespace XianxiaSurvivor.UI
 
             if (gameManager != null)
             {
-                if (gameManager.CurrentState != GameState.Paused)
+                if (gameManager.IsGameplayRunning)
                 {
                     gameManager.PauseGame();
                     isPausedByPanel = true;
@@ -146,6 +177,13 @@ namespace XianxiaSurvivor.UI
             HidePanelRoot();
             ClearOptionButtons();
             ResumeGameIfNeeded();
+        }
+
+        private void ClosePanelWithoutResuming()
+        {
+            HidePanelRoot();
+            ClearOptionButtons();
+            isPausedByPanel = false;
         }
 
         private void HidePanelRoot()
@@ -193,6 +231,26 @@ namespace XianxiaSurvivor.UI
             }
 
             isPausedByPanel = false;
+        }
+
+        private bool CanShowUpgradePanel()
+        {
+            if (IsRunEnded())
+            {
+                return false;
+            }
+
+            if (gameManager != null)
+            {
+                return gameManager.IsGameplayRunning || isPausedByPanel;
+            }
+
+            return Time.timeScale > 0f || isPausedByPanel;
+        }
+
+        private bool IsRunEnded()
+        {
+            return gameManager != null && gameManager.IsRunEnded;
         }
     }
 }
