@@ -6,7 +6,20 @@ using XianxiaSurvivor.Player;
 namespace XianxiaSurvivor.Skills
 {
     /// <summary>
-    /// 用途：生成、缓存和应用玩家升级时的技能三选一候选项，第一版只服务于飞剑术。
+    /// 通知 UI：当前有一组可展示的升级选项已经准备好。
+    /// </summary>
+    public readonly struct SkillUpgradeOptionsReadyEvent
+    {
+        public SkillUpgradeOptionsReadyEvent(GameObject player)
+        {
+            Player = player;
+        }
+
+        public GameObject Player { get; }
+    }
+
+    /// <summary>
+    /// 用途：生成、缓存并应用玩家升级时的三选一技能候选项，第一版只服务于飞剑术。
     /// </summary>
     [DisallowMultipleComponent]
     public class SkillUpgradeService : MonoBehaviour
@@ -23,6 +36,7 @@ namespace XianxiaSurvivor.Skills
         [SerializeField] private bool logDebugMessages = true;
 
         private readonly List<SkillUpgradeOption> currentOptions = new List<SkillUpgradeOption>(3);
+        private readonly Queue<List<SkillUpgradeOption>> pendingOptionSets = new Queue<List<SkillUpgradeOption>>();
         private bool isSubscribed;
         private bool warnedMissingFlyingSwordSkill;
 
@@ -65,17 +79,19 @@ namespace XianxiaSurvivor.Skills
             return currentOptions;
         }
 
+        public bool HasCurrentOptions => currentOptions.Count > 0;
+
         public bool ApplyUpgradeOption(SkillUpgradeOption option)
         {
             if (option == null || !option.IsValid)
             {
-                LogDebug("升级选项为空或无效，无法应用。");
+                LogDebug("Upgrade option is null or invalid.");
                 return false;
             }
 
             if (currentOptions.Count == 0 || !currentOptions.Contains(option))
             {
-                LogDebug("传入的升级选项不属于当前缓存选项，无法应用。");
+                LogDebug("The option does not belong to the current active set.");
                 return false;
             }
 
@@ -88,19 +104,22 @@ namespace XianxiaSurvivor.Skills
 
             if (!applied)
             {
-                LogDebug("升级选项类型暂不支持，无法应用。");
+                LogDebug("Unsupported upgrade option type.");
                 return false;
             }
 
             currentOptions.Clear();
-            LogFlyingSwordValues($"已应用升级：{option.Title}");
+            PromoteNextPendingOptions();
+            LogFlyingSwordValues($"Applied upgrade: {option.Title}");
             return true;
         }
 
         [ContextMenu("Debug Generate Upgrade Options")]
         private void DebugGenerateUpgradeOptions()
         {
-            GenerateUpgradeOptions();
+            pendingOptionSets.Clear();
+            SetCurrentOptions(BuildUpgradeOptions());
+            RaiseOptionsReadyEvent();
             LogCurrentOptions();
         }
 
@@ -109,7 +128,7 @@ namespace XianxiaSurvivor.Skills
         {
             if (currentOptions.Count == 0)
             {
-                Debug.LogWarning("当前没有缓存的升级选项，请先执行 Debug Generate Upgrade Options。", this);
+                Debug.LogWarning("No active upgrade option set exists. Run Debug Generate Upgrade Options first.", this);
                 return;
             }
 
@@ -123,36 +142,80 @@ namespace XianxiaSurvivor.Skills
                 return;
             }
 
-            GenerateUpgradeOptions();
-            LogDebug($"玩家升级，已生成 {currentOptions.Count} 个技能升级候选项。");
-        }
-
-        private void GenerateUpgradeOptions()
-        {
-            currentOptions.Clear();
-
-            if (!TryResolveFlyingSwordSkill())
+            List<SkillUpgradeOption> generatedOptions = BuildUpgradeOptions();
+            if (generatedOptions.Count == 0)
             {
                 return;
             }
 
-            currentOptions.Add(new SkillUpgradeOption(
+            if (!HasCurrentOptions)
+            {
+                SetCurrentOptions(generatedOptions);
+                RaiseOptionsReadyEvent();
+            }
+            else
+            {
+                pendingOptionSets.Enqueue(generatedOptions);
+            }
+
+            LogDebug($"Player leveled up. Active options: {currentOptions.Count}, pending sets: {pendingOptionSets.Count}.");
+        }
+
+        private List<SkillUpgradeOption> BuildUpgradeOptions()
+        {
+            List<SkillUpgradeOption> generatedOptions = new List<SkillUpgradeOption>(3);
+
+            if (!TryResolveFlyingSwordSkill())
+            {
+                return generatedOptions;
+            }
+
+            generatedOptions.Add(new SkillUpgradeOption(
                 "强化飞剑伤害",
                 $"飞剑伤害 +{damageIncrease:0.#}",
                 SkillUpgradeOptionType.FlyingSwordDamage,
                 damageIncrease));
 
-            currentOptions.Add(new SkillUpgradeOption(
+            generatedOptions.Add(new SkillUpgradeOption(
                 "缩短飞剑冷却",
                 $"飞剑冷却 -{cooldownReduction:0.##} 秒",
                 SkillUpgradeOptionType.FlyingSwordCooldown,
                 cooldownReduction));
 
-            currentOptions.Add(new SkillUpgradeOption(
+            generatedOptions.Add(new SkillUpgradeOption(
                 "提升飞剑索敌范围",
                 $"飞剑索敌范围 +{rangeIncrease:0.#}",
                 SkillUpgradeOptionType.FlyingSwordRange,
                 rangeIncrease));
+
+            return generatedOptions;
+        }
+
+        private void SetCurrentOptions(List<SkillUpgradeOption> generatedOptions)
+        {
+            currentOptions.Clear();
+            if (generatedOptions == null || generatedOptions.Count == 0)
+            {
+                return;
+            }
+
+            currentOptions.AddRange(generatedOptions);
+        }
+
+        private void PromoteNextPendingOptions()
+        {
+            if (pendingOptionSets.Count == 0)
+            {
+                return;
+            }
+
+            SetCurrentOptions(pendingOptionSets.Dequeue());
+            RaiseOptionsReadyEvent();
+        }
+
+        private void RaiseOptionsReadyEvent()
+        {
+            EventBus.Raise(new SkillUpgradeOptionsReadyEvent(gameObject));
         }
 
         private bool ApplyToFlyingSword(SkillUpgradeOption option)
@@ -193,7 +256,7 @@ namespace XianxiaSurvivor.Skills
             if (!warnedMissingFlyingSwordSkill)
             {
                 warnedMissingFlyingSwordSkill = true;
-                Debug.LogWarning("SkillUpgradeService 缺少 FlyingSwordSkill 引用，无法生成飞剑术升级选项。", this);
+                Debug.LogWarning("SkillUpgradeService is missing FlyingSwordSkill, so upgrade options cannot be generated.", this);
             }
 
             return false;
@@ -208,14 +271,14 @@ namespace XianxiaSurvivor.Skills
 
             if (currentOptions.Count == 0)
             {
-                Debug.Log("当前没有可用的技能升级候选项。", this);
+                Debug.Log("No active upgrade options are cached.", this);
                 return;
             }
 
             for (int i = 0; i < currentOptions.Count; i++)
             {
                 SkillUpgradeOption option = currentOptions[i];
-                Debug.Log($"{i + 1}. {option.Title}：{option.Description}", this);
+                Debug.Log($"{i + 1}. {option.Title}: {option.Description}", this);
             }
         }
 
@@ -227,7 +290,7 @@ namespace XianxiaSurvivor.Skills
             }
 
             Debug.Log(
-                $"{prefix}。当前飞剑数值：伤害 {flyingSwordSkill.CurrentDamage}，冷却 {flyingSwordSkill.CurrentCooldown:0.##}，范围 {flyingSwordSkill.CurrentRange:0.#}",
+                $"{prefix}. Current flying sword values: damage {flyingSwordSkill.CurrentDamage}, cooldown {flyingSwordSkill.CurrentCooldown:0.##}, range {flyingSwordSkill.CurrentRange:0.#}.",
                 this);
         }
 

@@ -84,6 +84,8 @@ namespace XianxiaSurvivor.Skills
                 return;
             }
 
+            EnsureTargetFinder();
+
             Vector2 origin = firePoint != null ? firePoint.position : transform.position;
             Transform target = targetFinder.FindNearestDamageable(origin, CurrentRange, enemyLayerMask);
 
@@ -193,6 +195,14 @@ namespace XianxiaSurvivor.Skills
             }
 
             return true;
+        }
+
+        private void EnsureTargetFinder()
+        {
+            if (targetFinder == null)
+            {
+                targetFinder = new TargetFinder(maxTargetResults);
+            }
         }
 
         public void AddDamage(float value)
