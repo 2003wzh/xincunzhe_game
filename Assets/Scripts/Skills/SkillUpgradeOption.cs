@@ -8,7 +8,10 @@ namespace XianxiaSurvivor.Skills
         None = 0,
         FlyingSwordDamage = 1,
         FlyingSwordCooldown = 2,
-        FlyingSwordRange = 3
+        FlyingSwordRange = 3,
+        FireballDamage = 4,
+        FireballCooldown = 5,
+        FireballExplosionRadius = 6
     }
 
     /// <summary>

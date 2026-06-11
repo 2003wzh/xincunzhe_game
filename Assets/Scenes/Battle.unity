@@ -1592,6 +1592,7 @@ GameObject:
   - component: {fileID: 1276439963}
   - component: {fileID: 1276439962}
   - component: {fileID: 1276439964}
+  - component: {fileID: 1276439965}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -1829,7 +1830,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skills:
   - {fileID: 1276439962}
-  gameManager: {fileID: 0}
+  additionalSkills:
+  - {fileID: 1276439965}
+  gameManager: {fileID: 1485678201}
 --- !u!114 &1276439964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1843,10 +1846,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flyingSwordSkill: {fileID: 1276439962}
+  fireballSkill: {fileID: 0}
   damageIncrease: 5
   cooldownReduction: 0.15
   rangeIncrease: 1.5
+  fireballDamageIncrease: 3
+  fireballCooldownReduction: 0.2
+  fireballExplosionRadiusIncrease: 0.3
   logDebugMessages: 1
+--- !u!114 &1276439965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276439953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc2a18b9f3440c39638791a5e414557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillData: {fileID: 11400000, guid: efc59f5a9981b634cbb413321a4b7d50, type: 2}
+  projectilePrefab: {fileID: 8767287265645346344, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+  firePoint: {fileID: 1276439959}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  maxTargetResults: 32
+  readySearchInterval: 0.1
 --- !u!1 &1277012192
 GameObject:
   m_ObjectHideFlags: 0
@@ -3280,6 +3307,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2118288307}
   m_CullTransparentMesh: 1
+--- !u!1001 &389865015296556344
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2205807901305232544, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_Name
+      value: FireballProjectile
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434320291410909179, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434320291410909179, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434320291410909179, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434320291410909179, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434320291410909179, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434320291410909179, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434320291410909179, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434320291410909179, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434320291410909179, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434320291410909179, guid: ac73ac57ce342df49804e695dc760642, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ac73ac57ce342df49804e695dc760642, type: 3}
 --- !u!1001 &558373098328197916
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3465,3 +3549,4 @@ SceneRoots:
   - {fileID: 3150365627900068459}
   - {fileID: 262575082}
   - {fileID: 2095430508}
+  - {fileID: 389865015296556344}

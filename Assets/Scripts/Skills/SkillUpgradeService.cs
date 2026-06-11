@@ -19,30 +19,38 @@ namespace XianxiaSurvivor.Skills
     }
 
     /// <summary>
-    /// 用途：生成、缓存并应用玩家升级时的三选一技能候选项，第一版只服务于飞剑术。
+    /// 用途：生成、缓存并应用玩家升级时的三选一技能候选项。
     /// </summary>
     [DisallowMultipleComponent]
     public class SkillUpgradeService : MonoBehaviour
     {
         [Header("Target Skill")]
         [SerializeField] private FlyingSwordSkill flyingSwordSkill;
+        [SerializeField] private FireballSkill fireballSkill;
 
         [Header("Flying Sword Options")]
         [SerializeField] private float damageIncrease = 5f;
         [SerializeField] private float cooldownReduction = 0.15f;
         [SerializeField] private float rangeIncrease = 1.5f;
 
+        [Header("Fireball Options")]
+        [SerializeField] private float fireballDamageIncrease = 3f;
+        [SerializeField] private float fireballCooldownReduction = 0.2f;
+        [SerializeField] private float fireballExplosionRadiusIncrease = 0.3f;
+
         [Header("Debug")]
         [SerializeField] private bool logDebugMessages = true;
 
         private readonly List<SkillUpgradeOption> currentOptions = new List<SkillUpgradeOption>(3);
         private readonly Queue<List<SkillUpgradeOption>> pendingOptionSets = new Queue<List<SkillUpgradeOption>>();
+        private readonly List<SkillUpgradeOption> upgradePool = new List<SkillUpgradeOption>(6);
         private bool isSubscribed;
         private bool warnedMissingFlyingSwordSkill;
 
         private void Awake()
         {
             TryResolveFlyingSwordSkill();
+            TryResolveFireballSkill();
         }
 
         private void OnEnable()
@@ -72,6 +80,9 @@ namespace XianxiaSurvivor.Skills
             damageIncrease = Mathf.Max(0f, damageIncrease);
             cooldownReduction = Mathf.Max(0f, cooldownReduction);
             rangeIncrease = Mathf.Max(0f, rangeIncrease);
+            fireballDamageIncrease = Mathf.Max(0f, fireballDamageIncrease);
+            fireballCooldownReduction = Mathf.Max(0f, fireballCooldownReduction);
+            fireballExplosionRadiusIncrease = Mathf.Max(0f, fireballExplosionRadiusIncrease);
         }
 
         public IReadOnlyList<SkillUpgradeOption> GetUpgradeOptions()
@@ -95,12 +106,7 @@ namespace XianxiaSurvivor.Skills
                 return false;
             }
 
-            if (!TryResolveFlyingSwordSkill())
-            {
-                return false;
-            }
-
-            bool applied = ApplyToFlyingSword(option);
+            bool applied = ApplyUpgrade(option);
 
             if (!applied)
             {
@@ -110,7 +116,7 @@ namespace XianxiaSurvivor.Skills
 
             currentOptions.Clear();
             PromoteNextPendingOptions();
-            LogFlyingSwordValues($"Applied upgrade: {option.Title}");
+            LogSkillValues($"Applied upgrade: {option.Title}");
             return true;
         }
 
@@ -163,32 +169,64 @@ namespace XianxiaSurvivor.Skills
 
         private List<SkillUpgradeOption> BuildUpgradeOptions()
         {
+            BuildUpgradePool();
             List<SkillUpgradeOption> generatedOptions = new List<SkillUpgradeOption>(3);
 
-            if (!TryResolveFlyingSwordSkill())
+            while (generatedOptions.Count < 3 && upgradePool.Count > 0)
             {
-                return generatedOptions;
+                int randomIndex = Random.Range(0, upgradePool.Count);
+                generatedOptions.Add(upgradePool[randomIndex]);
+                upgradePool.RemoveAt(randomIndex);
             }
 
-            generatedOptions.Add(new SkillUpgradeOption(
-                "强化飞剑伤害",
-                $"飞剑伤害 +{damageIncrease:0.#}",
-                SkillUpgradeOptionType.FlyingSwordDamage,
-                damageIncrease));
-
-            generatedOptions.Add(new SkillUpgradeOption(
-                "缩短飞剑冷却",
-                $"飞剑冷却 -{cooldownReduction:0.##} 秒",
-                SkillUpgradeOptionType.FlyingSwordCooldown,
-                cooldownReduction));
-
-            generatedOptions.Add(new SkillUpgradeOption(
-                "提升飞剑索敌范围",
-                $"飞剑索敌范围 +{rangeIncrease:0.#}",
-                SkillUpgradeOptionType.FlyingSwordRange,
-                rangeIncrease));
-
             return generatedOptions;
+        }
+
+        private void BuildUpgradePool()
+        {
+            upgradePool.Clear();
+
+            if (TryResolveFlyingSwordSkill())
+            {
+                upgradePool.Add(new SkillUpgradeOption(
+                    "强化飞剑伤害",
+                    $"飞剑伤害 +{damageIncrease:0.#}",
+                    SkillUpgradeOptionType.FlyingSwordDamage,
+                    damageIncrease));
+
+                upgradePool.Add(new SkillUpgradeOption(
+                    "缩短飞剑冷却",
+                    $"飞剑冷却 -{cooldownReduction:0.##} 秒",
+                    SkillUpgradeOptionType.FlyingSwordCooldown,
+                    cooldownReduction));
+
+                upgradePool.Add(new SkillUpgradeOption(
+                    "提升飞剑索敌范围",
+                    $"飞剑索敌范围 +{rangeIncrease:0.#}",
+                    SkillUpgradeOptionType.FlyingSwordRange,
+                    rangeIncrease));
+            }
+
+            if (TryResolveFireballSkill())
+            {
+                upgradePool.Add(new SkillUpgradeOption(
+                    "强化离火诀伤害",
+                    $"离火诀伤害 +{fireballDamageIncrease:0.#}",
+                    SkillUpgradeOptionType.FireballDamage,
+                    fireballDamageIncrease));
+
+                upgradePool.Add(new SkillUpgradeOption(
+                    "缩短离火诀冷却",
+                    $"离火诀冷却 -{fireballCooldownReduction:0.##} 秒",
+                    SkillUpgradeOptionType.FireballCooldown,
+                    fireballCooldownReduction));
+
+                upgradePool.Add(new SkillUpgradeOption(
+                    "扩大离火诀爆炸范围",
+                    $"离火诀爆炸范围 +{fireballExplosionRadiusIncrease:0.#}",
+                    SkillUpgradeOptionType.FireballExplosionRadius,
+                    fireballExplosionRadiusIncrease));
+            }
         }
 
         private void SetCurrentOptions(List<SkillUpgradeOption> generatedOptions)
@@ -218,20 +256,62 @@ namespace XianxiaSurvivor.Skills
             EventBus.Raise(new SkillUpgradeOptionsReadyEvent(gameObject));
         }
 
-        private bool ApplyToFlyingSword(SkillUpgradeOption option)
+        private bool ApplyUpgrade(SkillUpgradeOption option)
         {
             switch (option.OptionType)
             {
                 case SkillUpgradeOptionType.FlyingSwordDamage:
+                    if (!TryResolveFlyingSwordSkill())
+                    {
+                        return false;
+                    }
+
                     flyingSwordSkill.AddDamage(option.ValueChange);
                     return true;
 
                 case SkillUpgradeOptionType.FlyingSwordCooldown:
+                    if (!TryResolveFlyingSwordSkill())
+                    {
+                        return false;
+                    }
+
                     flyingSwordSkill.ReduceCooldown(option.ValueChange);
                     return true;
 
                 case SkillUpgradeOptionType.FlyingSwordRange:
+                    if (!TryResolveFlyingSwordSkill())
+                    {
+                        return false;
+                    }
+
                     flyingSwordSkill.AddRange(option.ValueChange);
+                    return true;
+
+                case SkillUpgradeOptionType.FireballDamage:
+                    if (!TryResolveFireballSkill())
+                    {
+                        return false;
+                    }
+
+                    fireballSkill.AddDamage(option.ValueChange);
+                    return true;
+
+                case SkillUpgradeOptionType.FireballCooldown:
+                    if (!TryResolveFireballSkill())
+                    {
+                        return false;
+                    }
+
+                    fireballSkill.ReduceCooldown(option.ValueChange);
+                    return true;
+
+                case SkillUpgradeOptionType.FireballExplosionRadius:
+                    if (!TryResolveFireballSkill())
+                    {
+                        return false;
+                    }
+
+                    fireballSkill.AddExplosionRadius(option.ValueChange);
                     return true;
 
                 default:
@@ -262,6 +342,17 @@ namespace XianxiaSurvivor.Skills
             return false;
         }
 
+        private bool TryResolveFireballSkill()
+        {
+            if (fireballSkill != null)
+            {
+                return true;
+            }
+
+            fireballSkill = GetComponent<FireballSkill>();
+            return fireballSkill != null;
+        }
+
         private void LogCurrentOptions()
         {
             if (!logDebugMessages)
@@ -282,16 +373,26 @@ namespace XianxiaSurvivor.Skills
             }
         }
 
-        private void LogFlyingSwordValues(string prefix)
+        private void LogSkillValues(string prefix)
         {
-            if (!logDebugMessages || flyingSwordSkill == null)
+            if (!logDebugMessages)
             {
                 return;
             }
 
-            Debug.Log(
-                $"{prefix}. Current flying sword values: damage {flyingSwordSkill.CurrentDamage}, cooldown {flyingSwordSkill.CurrentCooldown:0.##}, range {flyingSwordSkill.CurrentRange:0.#}.",
-                this);
+            if (flyingSwordSkill != null)
+            {
+                Debug.Log(
+                    $"{prefix}. Current flying sword values: damage {flyingSwordSkill.CurrentDamage}, cooldown {flyingSwordSkill.CurrentCooldown:0.##}, range {flyingSwordSkill.CurrentRange:0.#}.",
+                    this);
+            }
+
+            if (fireballSkill != null)
+            {
+                Debug.Log(
+                    $"{prefix}. Current fireball values: damage {fireballSkill.CurrentDamage}, cooldown {fireballSkill.CurrentCooldown:0.##}, explosion radius {fireballSkill.CurrentExplosionRadius:0.#}.",
+                    this);
+            }
         }
 
         private void LogDebug(string message)

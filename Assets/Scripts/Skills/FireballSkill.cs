@@ -10,6 +10,12 @@ namespace XianxiaSurvivor.Skills
     [DisallowMultipleComponent]
     public class FireballSkill : MonoBehaviour, IPlayerSkill
     {
+        private const float MinimumDamage = 1f;
+        private const float MinimumCooldown = 0.3f;
+        private const float MinimumRange = 0.1f;
+        private const float MinimumExplosionRadius = 0.1f;
+        private const float MaximumExplosionRadius = 4f;
+
         [Header("Config")]
         [SerializeField] private SkillData skillData;
         [SerializeField] private ExplosiveProjectile projectilePrefab;
@@ -34,9 +40,10 @@ namespace XianxiaSurvivor.Skills
         private float runtimeProjectileMaxDistance;
         private float runtimeExplosionRadius;
 
-        private int CurrentDamage => Mathf.Max(0, Mathf.RoundToInt(runtimeDamage));
-        private float CurrentCooldown => Mathf.Max(0.05f, runtimeCooldown);
-        private float CurrentRange => Mathf.Max(0.1f, runtimeRange);
+        public int CurrentDamage => Mathf.Max(1, Mathf.RoundToInt(runtimeDamage));
+        public float CurrentCooldown => Mathf.Max(MinimumCooldown, runtimeCooldown);
+        public float CurrentRange => Mathf.Max(MinimumRange, runtimeRange);
+        public float CurrentExplosionRadius => Mathf.Clamp(runtimeExplosionRadius, MinimumExplosionRadius, MaximumExplosionRadius);
 
         private void Awake()
         {
@@ -126,7 +133,7 @@ namespace XianxiaSurvivor.Skills
                 CurrentDamage,
                 runtimeProjectileSpeed,
                 runtimeProjectileMaxDistance,
-                runtimeExplosionRadius,
+                CurrentExplosionRadius,
                 gameObject,
                 enemyLayerMask);
 
@@ -169,6 +176,54 @@ namespace XianxiaSurvivor.Skills
             }
         }
 
+        public void AddDamage(float value)
+        {
+            if (!EnsureRuntimeValues())
+            {
+                return;
+            }
+
+            runtimeDamage = Mathf.Max(MinimumDamage, runtimeDamage + Mathf.Max(0f, value));
+        }
+
+        public void ReduceCooldown(float value)
+        {
+            if (!EnsureRuntimeValues())
+            {
+                return;
+            }
+
+            runtimeCooldown = Mathf.Max(MinimumCooldown, runtimeCooldown - Mathf.Max(0f, value));
+
+            if (cooldownTimer > runtimeCooldown)
+            {
+                cooldownTimer = runtimeCooldown;
+            }
+        }
+
+        public void AddExplosionRadius(float value)
+        {
+            if (!EnsureRuntimeValues())
+            {
+                return;
+            }
+
+            runtimeExplosionRadius = Mathf.Clamp(
+                runtimeExplosionRadius + Mathf.Max(0f, value),
+                MinimumExplosionRadius,
+                MaximumExplosionRadius);
+        }
+
+        private bool EnsureRuntimeValues()
+        {
+            if (!hasRuntimeValues)
+            {
+                InitializeRuntimeValues();
+            }
+
+            return hasRuntimeValues;
+        }
+
         private void InitializeRuntimeValues()
         {
             if (skillData == null)
@@ -182,7 +237,7 @@ namespace XianxiaSurvivor.Skills
             runtimeRange = skillData.Range;
             runtimeProjectileSpeed = skillData.ProjectileSpeed;
             runtimeProjectileMaxDistance = skillData.ProjectileMaxDistance;
-            runtimeExplosionRadius = skillData.ExplosionRadius;
+            runtimeExplosionRadius = Mathf.Clamp(skillData.ExplosionRadius, MinimumExplosionRadius, MaximumExplosionRadius);
             hasRuntimeValues = true;
         }
 
