@@ -20,12 +20,16 @@ namespace XianxiaSurvivor.Data
         [SerializeField] private float projectileSpeed = 12f;
         [SerializeField] private float projectileMaxDistance = 12f;
 
+        [Header("Area Effect")]
+        [SerializeField] private float explosionRadius = 1.5f;
+
         public string SkillName => skillName;
         public int Damage => damage;
         public float Cooldown => cooldown;
         public float Range => range;
         public float ProjectileSpeed => projectileSpeed;
         public float ProjectileMaxDistance => projectileMaxDistance;
+        public float ExplosionRadius => explosionRadius;
 
         private void OnValidate()
         {
@@ -34,6 +38,7 @@ namespace XianxiaSurvivor.Data
             range = Mathf.Max(0.1f, range);
             projectileSpeed = Mathf.Max(0.1f, projectileSpeed);
             projectileMaxDistance = Mathf.Max(0.1f, projectileMaxDistance);
+            explosionRadius = Mathf.Max(0.1f, explosionRadius);
         }
     }
 }
