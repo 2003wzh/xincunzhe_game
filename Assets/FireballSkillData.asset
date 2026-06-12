@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: FireballSkillData
   m_EditorClassIdentifier: 
   skillName: "\u79BB\u706B\u8BC0"
-  damage: 8
+  damage: 10
   cooldown: 2
-  range: 7
-  projectileSpeed: 8
-  projectileMaxDistance: 10
-  explosionRadius: 1.5
+  range: 7.5
+  projectileSpeed: 10
+  projectileMaxDistance: 11
+  explosionRadius: 1.6
