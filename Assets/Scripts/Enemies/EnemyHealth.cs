@@ -14,6 +14,7 @@ namespace XianxiaSurvivor.Enemies
         [SerializeField] private ExpOrb expOrbPrefab;
 
         private EnemyStats stats;
+        private HitFlashFeedback hitFlashFeedback;
         private bool hasDied;
 
         public bool IsAlive => stats != null && stats.IsAlive && !hasDied;
@@ -21,6 +22,12 @@ namespace XianxiaSurvivor.Enemies
         private void Awake()
         {
             stats = GetComponent<EnemyStats>();
+            hitFlashFeedback = GetComponent<HitFlashFeedback>();
+
+            if (hitFlashFeedback == null)
+            {
+                hitFlashFeedback = GetComponentInChildren<HitFlashFeedback>();
+            }
         }
 
         private void OnEnable()
@@ -28,6 +35,16 @@ namespace XianxiaSurvivor.Enemies
             if (stats == null)
             {
                 stats = GetComponent<EnemyStats>();
+            }
+
+            if (hitFlashFeedback == null)
+            {
+                hitFlashFeedback = GetComponent<HitFlashFeedback>();
+            }
+
+            if (hitFlashFeedback == null)
+            {
+                hitFlashFeedback = GetComponentInChildren<HitFlashFeedback>();
             }
 
             hasDied = false;
@@ -54,6 +71,7 @@ namespace XianxiaSurvivor.Enemies
 
             int previousHp = stats.CurrentHp;
             stats.TakeDamage(damageAmount);
+            hitFlashFeedback?.PlayFeedback();
 
             int delta = stats.CurrentHp - previousHp;
             EventBus.Raise(new EnemyHealthChangedEvent(gameObject, stats.CurrentHp, stats.MaxHp, delta));

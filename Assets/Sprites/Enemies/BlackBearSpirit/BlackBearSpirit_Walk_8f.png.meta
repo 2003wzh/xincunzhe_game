@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ecf8e18c002d09647a125467bdeadbec
+guid: 3f368ee47e9b4c84298b46b2f15bd40e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 192
+  spritePixelsToUnits: 160
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -110,127 +110,169 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_0
+      name: BlackBearSpirit_Walk_8f_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e53d1bf688ea88b4bbd3841002c97952
-      internalID: 1642941001
+      spriteID: 02d3300464286904793961ea8d09f909
+      internalID: 1136884669
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_1
+      name: BlackBearSpirit_Walk_8f_1
       rect:
         serializedVersion: 2
-        x: 192
+        x: 160
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd09f48543539c841a332e811051a200
-      internalID: -871870765
+      spriteID: 4f274bb557ff143428b0d5255a67dc29
+      internalID: 1545614710
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_2
+      name: BlackBearSpirit_Walk_8f_2
       rect:
         serializedVersion: 2
-        x: 384
+        x: 320
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7a39e3b65215d8d4d9bc1f298376ada5
-      internalID: -1124375129
+      spriteID: fcd12424019af9c4ba34972592bb43dd
+      internalID: -1254950139
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_3
+      name: BlackBearSpirit_Walk_8f_3
       rect:
         serializedVersion: 2
-        x: 576
+        x: 480
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 363471e257c66dc4ba21909985c0fc27
-      internalID: 628344245
+      spriteID: 02525398681f993478697f561ce25b03
+      internalID: 1230480148
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_4
+      name: BlackBearSpirit_Walk_8f_4
       rect:
         serializedVersion: 2
-        x: 768
+        x: 640
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba20e595cf2b5974eb73027ed9b092c1
-      internalID: 1652965608
+      spriteID: 0742952658ca5804d825e896026b3837
+      internalID: 1120005804
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_5
+      name: BlackBearSpirit_Walk_8f_5
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 024a20d0ed5fbae448ec9d925efd55cd
+      internalID: -884496225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BlackBearSpirit_Walk_8f_6
       rect:
         serializedVersion: 2
         x: 960
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b8c01787debb2e24890b408937bd9125
-      internalID: -1919811191
+      spriteID: 1f26f479da9cb9742990dfa1854076d0
+      internalID: -689165054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BlackBearSpirit_Walk_8f_7
+      rect:
+        serializedVersion: 2
+        x: 1120
+        y: 0
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1dc459322d790d54abe8f463631d0615
+      internalID: 431778259
       vertices: []
       indices: 
       edges: []
@@ -246,12 +288,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      NoviceFireballExplosion_6f_0: 1642941001
-      NoviceFireballExplosion_6f_1: -871870765
-      NoviceFireballExplosion_6f_2: -1124375129
-      NoviceFireballExplosion_6f_3: 628344245
-      NoviceFireballExplosion_6f_4: 1652965608
-      NoviceFireballExplosion_6f_5: -1919811191
+      BlackBearSpirit_Walk_8f_0: 1136884669
+      BlackBearSpirit_Walk_8f_1: 1545614710
+      BlackBearSpirit_Walk_8f_2: -1254950139
+      BlackBearSpirit_Walk_8f_3: 1230480148
+      BlackBearSpirit_Walk_8f_4: 1120005804
+      BlackBearSpirit_Walk_8f_5: -884496225
+      BlackBearSpirit_Walk_8f_6: -689165054
+      BlackBearSpirit_Walk_8f_7: 431778259
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

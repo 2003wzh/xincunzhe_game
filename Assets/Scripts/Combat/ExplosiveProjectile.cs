@@ -15,6 +15,13 @@ namespace XianxiaSurvivor.Combat
 
         [SerializeField] private int maxExplosionTargets = 32;
 
+        [Header("Visual Effects")]
+        [SerializeField] private GameObject explosionEffectPrefab;
+        [SerializeField] private bool spawnExplosionEffect = true;
+
+        [Header("Debug")]
+        [SerializeField] private bool debugCollisionLog = true;
+
         private AreaDamage areaDamage;
         private Rigidbody2D body;
         private Vector2 direction = Vector2.right;
@@ -27,6 +34,7 @@ namespace XianxiaSurvivor.Combat
         private LayerMask targetLayerMask;
         private bool isInitialized;
         private bool hasHit;
+        private bool hasExploded;
 
         private void Awake()
         {
@@ -51,6 +59,7 @@ namespace XianxiaSurvivor.Combat
         {
             traveledDistance = 0f;
             hasHit = false;
+            hasExploded = false;
             isInitialized = false;
         }
 
@@ -89,17 +98,19 @@ namespace XianxiaSurvivor.Combat
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            LogCollisionDiagnostics(other);
+
             if (!isInitialized || hasHit || other == null)
             {
                 return;
             }
 
-            if (source != null && (other.gameObject == source || other.transform.IsChildOf(source.transform)))
+            if (!IsLayerInMask(other.gameObject.layer, targetLayerMask))
             {
                 return;
             }
 
-            if (!IsLayerInMask(other.gameObject.layer, targetLayerMask))
+            if (ShouldIgnoreCollision(other))
             {
                 return;
             }
@@ -119,7 +130,7 @@ namespace XianxiaSurvivor.Combat
             hasHit = true;
             Vector2 hitPoint = transform.position;
             damageable.TakeDamage(new DamageInfo(damage, source, hitPoint));
-            areaDamage.ApplyDamage(hitPoint, explosionRadius, damage, source, targetLayerMask);
+            Explode(hitPoint);
             Destroy(gameObject);
         }
 
@@ -147,6 +158,7 @@ namespace XianxiaSurvivor.Combat
             targetLayerMask = damageTargetLayerMask;
             traveledDistance = 0f;
             hasHit = false;
+            hasExploded = false;
             isInitialized = true;
             RotateToDirection();
         }
@@ -155,6 +167,109 @@ namespace XianxiaSurvivor.Combat
         {
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        }
+
+        private void Explode(Vector2 hitPoint)
+        {
+            if (hasExploded)
+            {
+                return;
+            }
+
+            hasExploded = true;
+            areaDamage.ApplyDamage(hitPoint, explosionRadius, damage, source, targetLayerMask);
+            SpawnExplosionEffect(hitPoint);
+        }
+
+        private void SpawnExplosionEffect(Vector2 hitPoint)
+        {
+            if (!spawnExplosionEffect || explosionEffectPrefab == null)
+            {
+                return;
+            }
+
+            Instantiate(explosionEffectPrefab, hitPoint, Quaternion.identity);
+        }
+
+        private bool ShouldIgnoreCollision(Collider2D other)
+        {
+            Transform otherTransform = other.transform;
+
+            if (other.gameObject == gameObject || otherTransform.IsChildOf(transform))
+            {
+                return true;
+            }
+
+            if (source == null)
+            {
+                return false;
+            }
+
+            Transform sourceTransform = source.transform;
+
+            if (other.gameObject == source)
+            {
+                return true;
+            }
+
+            if (otherTransform.IsChildOf(sourceTransform))
+            {
+                return true;
+            }
+
+            return sourceTransform.IsChildOf(otherTransform);
+        }
+
+        private void LogCollisionDiagnostics(Collider2D other)
+        {
+            if (!debugCollisionLog)
+            {
+                return;
+            }
+
+            string projectileName = gameObject != null ? gameObject.name : "null";
+            string otherName = other != null ? other.name : "null";
+            int otherLayer = other != null ? other.gameObject.layer : -1;
+            string otherLayerName = other != null ? LayerMask.LayerToName(otherLayer) : "null";
+            string otherRootName = other != null ? other.transform.root.name : "null";
+            string sourceName = source != null ? source.name : "null";
+            bool passesLayerMask = other != null && IsLayerInMask(other.gameObject.layer, targetLayerMask);
+            bool ignoredBySourceOrProjectile = other != null && ShouldIgnoreCollision(other);
+            IDamageable damageable = null;
+
+            if (other != null)
+            {
+                damageable = other.GetComponent<IDamageable>();
+
+                if (damageable == null)
+                {
+                    damageable = other.GetComponentInParent<IDamageable>();
+                }
+            }
+
+            bool hasValidDamageable = damageable != null && damageable.IsAlive;
+            bool willExplode = isInitialized && !hasHit && other != null && passesLayerMask && !ignoredBySourceOrProjectile && hasValidDamageable;
+            bool willSpawnExplosionEffect = willExplode && !hasExploded && spawnExplosionEffect && explosionEffectPrefab != null;
+            bool willDestroyProjectile = willExplode;
+
+            Debug.Log(
+                "[ExplosiveProjectile] Collision diagnostic"
+                + $" | projectile={projectileName}"
+                + $" | other={otherName}"
+                + $" | otherLayer={otherLayer}"
+                + $" | otherLayerName={otherLayerName}"
+                + $" | otherRoot={otherRootName}"
+                + $" | source={sourceName}"
+                + $" | targetLayerMask={targetLayerMask.value}"
+                + $" | isInitialized={isInitialized}"
+                + $" | hasHit={hasHit}"
+                + $" | hasExploded={hasExploded}"
+                + $" | passesLayerMask={passesLayerMask}"
+                + $" | ignoredBySourceOrProjectile={ignoredBySourceOrProjectile}"
+                + $" | hasIDamageable={damageable != null}"
+                + $" | damageableAlive={hasValidDamageable}"
+                + $" | willSpawnExplosionEffect={willSpawnExplosionEffect}"
+                + $" | willDestroyProjectile={willDestroyProjectile}");
         }
 
         private static bool IsLayerInMask(int layer, LayerMask layerMask)

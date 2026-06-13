@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ecf8e18c002d09647a125467bdeadbec
+guid: beea01ed5f5aa0248904235c702692e2
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 192
+  spritePixelsToUnits: 160
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -110,127 +110,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_0
+      name: BlackBearSpirit_Attack_6f_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e53d1bf688ea88b4bbd3841002c97952
-      internalID: 1642941001
+      spriteID: 3f535f268516211428b28205bd9755da
+      internalID: -1623866602
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_1
+      name: BlackBearSpirit_Attack_6f_1
       rect:
         serializedVersion: 2
-        x: 192
+        x: 160
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd09f48543539c841a332e811051a200
-      internalID: -871870765
+      spriteID: a440e9b1eb5980a42a1353f1e6645d17
+      internalID: -479110792
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_2
+      name: BlackBearSpirit_Attack_6f_2
       rect:
         serializedVersion: 2
-        x: 384
+        x: 320
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7a39e3b65215d8d4d9bc1f298376ada5
-      internalID: -1124375129
+      spriteID: 932956937ce17af44a540f0d581f1158
+      internalID: -1715790205
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_3
+      name: BlackBearSpirit_Attack_6f_3
       rect:
         serializedVersion: 2
-        x: 576
+        x: 480
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 363471e257c66dc4ba21909985c0fc27
-      internalID: 628344245
+      spriteID: 1713c8e38e532b14a9f800b011dd8128
+      internalID: -937826338
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_4
+      name: BlackBearSpirit_Attack_6f_4
       rect:
         serializedVersion: 2
-        x: 768
+        x: 640
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba20e595cf2b5974eb73027ed9b092c1
-      internalID: 1652965608
+      spriteID: 46d5c7b2c1b9a56418c3bdef45543fbe
+      internalID: -1342356223
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NoviceFireballExplosion_6f_5
+      name: BlackBearSpirit_Attack_6f_5
       rect:
         serializedVersion: 2
-        x: 960
+        x: 800
         y: 0
-        width: 192
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 160
+        height: 160
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b8c01787debb2e24890b408937bd9125
-      internalID: -1919811191
+      spriteID: 85b2b39adfd0173499aa799a6078843e
+      internalID: 1016805374
       vertices: []
       indices: 
       edges: []
@@ -246,12 +246,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      NoviceFireballExplosion_6f_0: 1642941001
-      NoviceFireballExplosion_6f_1: -871870765
-      NoviceFireballExplosion_6f_2: -1124375129
-      NoviceFireballExplosion_6f_3: 628344245
-      NoviceFireballExplosion_6f_4: 1652965608
-      NoviceFireballExplosion_6f_5: -1919811191
+      BlackBearSpirit_Attack_6f_0: -1623866602
+      BlackBearSpirit_Attack_6f_1: -479110792
+      BlackBearSpirit_Attack_6f_2: -1715790205
+      BlackBearSpirit_Attack_6f_3: -937826338
+      BlackBearSpirit_Attack_6f_4: -1342356223
+      BlackBearSpirit_Attack_6f_5: 1016805374
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

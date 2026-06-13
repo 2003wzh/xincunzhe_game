@@ -16,6 +16,6 @@ MonoBehaviour:
   damage: 10
   cooldown: 2
   range: 7.5
-  projectileSpeed: 10
-  projectileMaxDistance: 11
+  projectileSpeed: 6
+  projectileMaxDistance: 5
   explosionRadius: 1.6

@@ -1,6 +1,7 @@
 using UnityEngine;
 using XianxiaSurvivor.Combat;
 using XianxiaSurvivor.Data;
+using XianxiaSurvivor.Player;
 using XianxiaSurvivor.Utils;
 
 namespace XianxiaSurvivor.Skills
@@ -32,6 +33,7 @@ namespace XianxiaSurvivor.Skills
         private bool warnedMissingLayerMask;
         private bool warnedPoolMissingProjectile;
         private bool hasRuntimeValues;
+        private PlayerCastFeedback castFeedback;
         private float runtimeDamage;
         private float runtimeCooldown;
         private float runtimeRange;
@@ -50,6 +52,7 @@ namespace XianxiaSurvivor.Skills
             }
 
             targetFinder = new TargetFinder(maxTargetResults);
+            CacheCastFeedback();
             InitializeRuntimeValues();
         }
 
@@ -134,7 +137,23 @@ namespace XianxiaSurvivor.Skills
                 enemyLayerMask,
                 ownerPool);
 
+            castFeedback?.PlayCastFeedback();
             return true;
+        }
+
+        private void CacheCastFeedback()
+        {
+            castFeedback = GetComponent<PlayerCastFeedback>();
+
+            if (castFeedback == null)
+            {
+                castFeedback = GetComponentInParent<PlayerCastFeedback>();
+            }
+
+            if (castFeedback == null)
+            {
+                castFeedback = GetComponentInChildren<PlayerCastFeedback>();
+            }
         }
 
         private Projectile SpawnProjectile(Vector3 position, Quaternion rotation, out ObjectPool ownerPool)

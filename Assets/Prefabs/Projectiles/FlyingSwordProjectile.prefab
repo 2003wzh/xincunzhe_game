@@ -157,7 +157,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.75, y: 0.05}
   m_EdgeRadius: 0
 --- !u!114 &2234686302922076803
 MonoBehaviour:
@@ -171,3 +171,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d73550762348329ffdd9a18b3b5d44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitEffectPrefab: {fileID: 8264305534536772561, guid: adfff0c4ffcd6834d8d638c9b417f653, type: 3}
+  spawnHitEffect: 1
+  debugCollisionLog: 0

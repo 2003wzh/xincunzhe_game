@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: "\u98DE\u5251\u672F"
   damage: 12
-  cooldown: 0.85
+  cooldown: 1
   range: 8.5
-  projectileSpeed: 14
-  projectileMaxDistance: 14
+  projectileSpeed: 7
+  projectileMaxDistance: 5
+  explosionRadius: 1.5

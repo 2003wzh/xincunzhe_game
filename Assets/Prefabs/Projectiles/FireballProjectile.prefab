@@ -149,7 +149,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.49999997
+  m_Radius: 0.15
 --- !u!114 &8767287265645346344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,6 +163,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxExplosionTargets: 32
+  explosionEffectPrefab: {fileID: 9127852950477198084, guid: 26248056a5ae93e469bbd399736c20c5, type: 3}
+  spawnExplosionEffect: 1
+  debugCollisionLog: 0
 --- !u!95 &-3991495767800315705
 Animator:
   serializedVersion: 5
